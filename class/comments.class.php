@@ -22,7 +22,7 @@ class Comments extends Database {
                 $where =  " WHERE parent IS NULL OR parent=0 ";
             }
             
-            $sql = sprintf("SELECT * FROM comments %s ORDER BY date DESC, id DESC LIMIT %s,%s", $where, $start, $limit);
+            $sql = sprintf("SELECT * FROM comments %s ORDER BY last_update DESC, id DESC LIMIT %s,%s", $where, $start, $limit);
             
             $this->query($sql);
             $stmt = $this->resultset();
@@ -120,7 +120,8 @@ class Comments extends Database {
                 text='%s',
                 parent='%s',
                 gcm='%s',
-                date=NOW()",
+                date=NOW(),
+                last_update=NOW()",
                 $_SERVER['REMOTE_ADDR'],
                 $array_data["text"],
                 $array_data["parent"],
@@ -132,10 +133,35 @@ class Comments extends Database {
             $this->execute();
 
             $result = $this->lastInsertId();
+
+            // Updating the date of parents
+            $this->update_date_parents($result);
         } catch(Exception $e){
             $this->error_message = $e->getMessage();
         }
         return $result;        
+    }
+
+    public function update_date_parents($comment_id) {
+        $result = false;
+        try {
+            $affecteds = 0;
+            $parent_list = array();
+            $this->getParents($comment_id, $parent_list);
+
+            foreach($parent_list as $parent) {
+                $sql = sprintf("UPDATE comments SET last_update=NOW() WHERE id=%s", $parent["id"]);
+                $this->query($sql);
+                if($this->execute()) {
+                    $affecteds = $affecteds+1;
+                }
+            }
+
+            $result = $affecteds;
+        } catch(Exception $e){
+            $this->error_message = $e->getMessage();
+        }
+        return $result;
     }
 
     public function getError()   {
