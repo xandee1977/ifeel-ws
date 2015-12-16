@@ -12,7 +12,8 @@
     {
         "id":{$comment["id"]|json_encode},
         "ip":{$comment["ip"]|json_encode},
-        "text":{$comment["text"]|json_encode},
+        "longtext":{$comment["text"]|json_encode},
+        "text":{$comment["text"]|truncate:10:"":true|json_encode},
         "parent":{$comment["parent"]|json_encode},
         "gcm":{$comment["gcm"]|json_encode},
         "num_comments":{$comment["num_comments"]|json_encode},
