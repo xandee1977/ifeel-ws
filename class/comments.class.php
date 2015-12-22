@@ -111,6 +111,15 @@ class Comments extends Database {
             if(!is_array($array_data)) {
                throw new Exception("Erro de parser (param JSON -> array_data).");
             }
+
+            $country = null;
+            $city = null;
+            $location_data = $this->getLocationData($_SERVER['REMOTE_ADDR']);
+            if($location_data) {
+                $country = $location_data->country;
+                $city = $location_data->city;
+            }
+
             // Saving on database
             $sql = sprintf("
             INSERT INTO
@@ -121,12 +130,15 @@ class Comments extends Database {
                 parent='%s',
                 gcm='%s',
                 date=NOW(),
+                country='%s',
+                city='%s',
                 last_update=NOW()",
                 $_SERVER['REMOTE_ADDR'],
                 $array_data["text"],
                 $array_data["parent"],
-                $array_data["gcm"]
-
+                $array_data["gcm"],
+                $country,
+                $city
             );
 
             $this->query($sql);
@@ -158,6 +170,20 @@ class Comments extends Database {
             }
 
             $result = $affecteds;
+        } catch(Exception $e){
+            $this->error_message = $e->getMessage();
+        }
+        return $result;
+    }
+
+    public function getLocationData($ip) {
+        $result = false;
+        try {
+            $url = sprintf("http://ipinfo.io/%s", $ip);
+            $location_data = json_decode(file_get_contents($url));
+            if(!is_null($location_data)) {
+                $result = $location_data;
+            }
         } catch(Exception $e){
             $this->error_message = $e->getMessage();
         }
