@@ -136,7 +136,7 @@ class Comments extends Database {
                 $_SERVER['REMOTE_ADDR'],
                 $array_data["text"],
                 $array_data["parent"],
-                $array_data["gcm"],
+                $array_data["gcm_id"],
                 $country,
                 $city
             );

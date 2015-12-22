@@ -72,6 +72,12 @@ try {
                 case 'save':
                     $json_data = $HTTP_RAW_POST_DATA;
                     $array_data = json_decode($json_data, true);                
+
+                    $array_data["gcm_id"] = null;
+                    if(isset($_REQUEST["gcm_id"])) {
+                        $array_data["gcm_id"] = $_REQUEST["gcm_id"];
+                    }
+
                     $comment_id = $comment_obj->saveComment($array_data);
                     if(!$comment_id) {
                        throw new Exception("Erro ao salvar comentario."); 
@@ -80,6 +86,15 @@ try {
                         if(!$comment) {
                             throw new Exception("Erro ao carregar comentario.");
                         }
+                        /*
+                        // Se recebeu o ID do GCM
+                        if(isset($_REQUEST["gcm_id"])) {
+                            include_once 'class/GCM.class.php';
+                            $gcm = new GCM(GCM_API_KEY);
+                            $gcm->setRegistrationIds([$_REQUEST["gcm_id"]]);
+                            $gcm_result = $gcm->sendMessage("Mensagem recebida");
+                        }
+                        */
                         $smarty->assign("comment", $comment);
                     }
                 break;

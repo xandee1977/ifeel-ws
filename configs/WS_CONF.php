@@ -7,10 +7,10 @@
 
 // Database configs:
 define("DB_HOST", "localhost");
-define("DB_USER", "root");
-define("DB_PASS", "123456");
+define("DB_USER", "i1224818_wp1");
+define("DB_PASS", "B~et8yPb~c22.]5");
 define("DB_NAME", "ifeel");
-define("SMARTY_PATH", "../smarty/libs/Smarty.class.php");
+define("SMARTY_PATH", "../ws-game/lib/smarty/libs/Smarty.class.php");
 
 
 /*
@@ -21,6 +21,6 @@ define("DB_NAME", "gamecollector");
 */
 
 // GCM (Google Cloud Message) configs:
-//define("GCM_API_KEY", "AIzaSyDomP5025KmLGsL6WBJM4vwKlOY4J5IxZw");
+define("GCM_API_KEY", "AIzaSyAf5H9oq3MKgDk3AWoU6KvxGYZ5amNSLx8");
 ?>
 
