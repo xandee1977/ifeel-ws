@@ -72,6 +72,10 @@ try {
                 case 'save':
                     $json_data = $HTTP_RAW_POST_DATA;
                     $array_data = json_decode($json_data, true);                
+                    
+                    if(is_null($array_data["text"])) {
+                       throw new Exception("Texto em branco.");
+                    }
 
                     $array_data["gcm_id"] = null;
                     if(isset($_REQUEST["gcm_id"])) {

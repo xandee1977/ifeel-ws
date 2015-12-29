@@ -190,6 +190,35 @@ class Comments extends Database {
         return $result;
     }
 
+
+    public function saveBTC($minor, $major) {
+        $result = false;
+        try {
+            // Saving on database
+            $sql = sprintf("
+            INSERT INTO
+                btc_tbl
+            SET
+                minor='%s',
+                major='%s',
+                date=NOW()",
+                $minor,
+                $major
+            );
+
+            $this->query($sql);
+            $this->execute();
+
+            $result = $this->lastInsertId();
+
+            // Updating the date of parents
+            $this->update_date_parents($result);
+        } catch(Exception $e){
+            $this->error_message = $e->getMessage();
+        }
+        return $result;        
+    }
+
     public function getError()   {
         return $this->error_message;
     }
